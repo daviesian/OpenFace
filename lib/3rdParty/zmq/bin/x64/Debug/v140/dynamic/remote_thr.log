@@ -1,0 +1,9 @@
+﻿  ConfigurationType : Application
+  Configuration     : DebugDEXE
+  PlatformToolset   : v140
+  TargetPath        : C:\dev\libzmq\builds\msvc\vs2015\remote_thr\..\..\..\..\bin\x64\Debug\v140\dynamic\remote_thr.exe
+  Linkage-libzmq    : dynamic
+  remote_thr.cpp
+  remote_thr.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\remote_thr\..\..\..\..\bin\x64\Debug\v140\dynamic\remote_thr.exe
+  Copying libzmq.dll -> C:\dev\libzmq\bin\x64\Debug\v140\dynamic\libzmq.dll
+  Copying libzmq.pdb -> C:\dev\libzmq\bin\x64\Debug\v140\dynamic\libzmq.pdb

@@ -1,0 +1,7 @@
+﻿  ConfigurationType : DynamicLibrary
+  Configuration     : DebugDLL
+  PlatformToolset   : v140
+  TargetPath        : C:\dev\libzmq\builds\msvc\vs2015\libzmq\..\..\..\..\bin\Win32\Debug\v140\dynamic\libzmq.dll
+  Option-openpgm    : 
+  Option-gssapi     : 
+  libzmq.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\libzmq\..\..\..\..\bin\Win32\Debug\v140\dynamic\libzmq.dll

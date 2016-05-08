@@ -1,0 +1,9 @@
+﻿  ConfigurationType : Application
+  Configuration     : DebugDEXE
+  PlatformToolset   : v140
+  TargetPath        : C:\dev\libzmq\builds\msvc\vs2015\inproc_thr\..\..\..\..\bin\Win32\Debug\v140\dynamic\inproc_thr.exe
+  Linkage-libzmq    : dynamic
+  inproc_thr.cpp
+  inproc_thr.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\inproc_thr\..\..\..\..\bin\Win32\Debug\v140\dynamic\inproc_thr.exe
+  Copying libzmq.dll -> C:\dev\libzmq\bin\Win32\Debug\v140\dynamic\libzmq.dll
+  Copying libzmq.pdb -> C:\dev\libzmq\bin\Win32\Debug\v140\dynamic\libzmq.pdb

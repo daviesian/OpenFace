@@ -1,0 +1,9 @@
+﻿  ConfigurationType : Application
+  Configuration     : ReleaseDEXE
+  PlatformToolset   : v140
+  TargetPath        : C:\dev\libzmq\builds\msvc\vs2015\inproc_lat\..\..\..\..\bin\x64\Release\v140\dynamic\inproc_lat.exe
+  Linkage-libzmq    : dynamic
+  inproc_lat.cpp
+  inproc_lat.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\inproc_lat\..\..\..\..\bin\x64\Release\v140\dynamic\inproc_lat.exe
+  inproc_lat.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\inproc_lat\..\..\..\..\bin\x64\Release\v140\dynamic\inproc_lat.pdb (Full PDB)
+  Copying libzmq.dll -> C:\dev\libzmq\bin\x64\Release\v140\dynamic\libzmq.dll

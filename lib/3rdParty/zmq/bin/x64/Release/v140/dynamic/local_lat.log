@@ -1,0 +1,9 @@
+﻿  ConfigurationType : Application
+  Configuration     : ReleaseDEXE
+  PlatformToolset   : v140
+  TargetPath        : C:\dev\libzmq\builds\msvc\vs2015\local_lat\..\..\..\..\bin\x64\Release\v140\dynamic\local_lat.exe
+  Linkage-libzmq    : dynamic
+  local_lat.cpp
+  local_lat.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\local_lat\..\..\..\..\bin\x64\Release\v140\dynamic\local_lat.exe
+  local_lat.vcxproj -> C:\dev\libzmq\builds\msvc\vs2015\local_lat\..\..\..\..\bin\x64\Release\v140\dynamic\local_lat.pdb (Full PDB)
+  Copying libzmq.dll -> C:\dev\libzmq\bin\x64\Release\v140\dynamic\libzmq.dll
