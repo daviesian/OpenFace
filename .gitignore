@@ -21,3 +21,5 @@ matlab_runners/Feature Point Experiments/yt_features_clm/
 matlab_runners/Gaze Experiments/mpii_out/
 Release/
 OpenFace.VC.db
+x64/
+*.opendb

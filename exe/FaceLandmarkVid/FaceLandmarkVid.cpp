@@ -57,12 +57,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 // FaceTrackingVid.cpp : Defines the entry point for the console application for tracking faces in videos.
 
+// Must include this before winsock.h. ZMQ needs this, something else needs winsock.h
+#include <winsock2.h>
+
 // Libraries for landmark detection (includes CLNF and CLM modules)
 #include "LandmarkCoreIncludes.h"
 #include "GazeEstimation.h"
 
 #include <fstream>
 #include <sstream>
+
+// Libraries for AU prediction
+#include "FaceAnalyser.h"
 
 // OpenCV includes
 #include <opencv2/videoio/videoio.hpp>  // Video write
@@ -73,6 +79,10 @@
 // Boost includes
 #include <filesystem.hpp>
 #include <filesystem/fstream.hpp>
+
+// ZMQ includes
+#include <zmq.hpp>
+#include <time.h>
 
 #define INFO_STREAM( stream ) \
 std::cout << stream << std::endl
@@ -93,6 +103,8 @@ static void printErrorAndAbort( const std::string & error )
 printErrorAndAbort( std::string( "Fatal error: " ) + stream )
 
 using namespace std;
+using namespace boost::filesystem;
+
 
 vector<string> get_arguments(int argc, char **argv)
 {
@@ -179,6 +191,30 @@ void visualise_tracking(cv::Mat& captured_image, cv::Mat_<float>& depth_image, c
 int main (int argc, char **argv)
 {
 
+	//  Prepare our context and publisher
+	zmq::context_t context(1);
+	zmq::socket_t publisher(context, ZMQ_PUB);
+	publisher.bind("tcp://*:5556");
+	/*
+	while (1) {
+		cout << "Hello?" << endl;
+		int zipcode, temperature, relhumidity;
+
+		//  Get values that will fool the boss
+		zipcode = 56787;
+		temperature = 78;
+		relhumidity = 86;
+
+		//  Send message to all subscribers
+		zmq::message_t message(20);
+		snprintf((char*)message.data(), 20,
+			"%05d %d %d", zipcode, temperature, relhumidity);
+		publisher.send(message);
+
+	}
+	return 0;*/
+
+
 	vector<string> arguments = get_arguments(argc, argv);
 
 	// Some initial parameters that can be overriden from command line	
@@ -220,6 +256,34 @@ int main (int argc, char **argv)
 	int f_n = -1;
 	
 	det_parameters.track_gaze = true;
+
+	cv::Mat_<int> triangulation;
+	string tri_loc;
+	if (exists(path("model/tris_68_full.txt")))
+	{
+		std::ifstream triangulation_file("model/tris_68_full.txt");
+		LandmarkDetector::ReadMat(triangulation_file, triangulation);
+		tri_loc = "model/tris_68_full.txt";
+	}
+	else
+	{
+		cout << "Can't find triangulation files, exiting" << endl;
+		return 0;
+	}
+
+	string au_loc;
+	if (exists(path("AU_predictors/AU_all_best.txt")))
+	{
+		au_loc = "AU_predictors/AU_all_best.txt";
+	}
+	else
+	{
+		cout << "Can't find AU prediction files, exiting" << endl;
+		return 0;
+	}
+
+	// Creating a  face analyser that will be used for AU extraction
+	FaceAnalysis::FaceAnalyser face_analyser(vector<cv::Vec3d>(), 0.7, 112, 112, au_loc, tri_loc);
 
 	while(!done) // this is not a for loop as we might also be reading from a webcam
 	{
@@ -352,6 +416,79 @@ int main (int argc, char **argv)
 			{
 				FaceAnalysis::EstimateGaze(clnf_model, gazeDirection0, fx, fy, cx, cy, true);
 				FaceAnalysis::EstimateGaze(clnf_model, gazeDirection1, fx, fy, cx, cy, false);
+			}
+
+			face_analyser.AddNextFrame(captured_image, clnf_model, frame_count/fps_tracker, false, !det_parameters.quiet_mode);
+
+
+			if (detection_success) {
+				
+				stringstream globalStream;
+				globalStream << "GLOBAL";
+				for (int i = 0; i < clnf_model.params_global.rows; i++) {
+					globalStream << " " << clnf_model.params_global[i];
+				}
+				string global = globalStream.str();
+
+				zmq::message_t messageGlobal(global.c_str(), global.length());
+				publisher.send(messageGlobal);
+
+				stringstream localStream;
+				localStream << "LOCAL";
+				for (int i = 0; i < clnf_model.params_local.rows; i++) {
+					localStream << " " << clnf_model.params_local[i][0];
+				}
+				string local = localStream.str();
+
+				zmq::message_t messageLocal(local.c_str(), local.length());
+				publisher.send(messageLocal);
+
+				stringstream auStream;
+				auStream << "AU";
+
+
+				auto aus_reg = face_analyser.GetCurrentAUsReg();
+
+				vector<string> au_reg_names = face_analyser.GetAURegNames();
+				std::sort(au_reg_names.begin(), au_reg_names.end());
+
+				// write out ar the correct index
+				for (string au_name : au_reg_names)
+				{
+					for (auto au_reg : aus_reg)
+					{
+						if (au_name.compare(au_reg.first) == 0)
+						{
+							auStream << " " << au_name << ":" << au_reg.second;
+							break;
+						}
+					}
+				}
+
+
+				auto aus_class = face_analyser.GetCurrentAUsClass();
+
+				vector<string> au_class_names = face_analyser.GetAUClassNames();
+				std::sort(au_class_names.begin(), au_class_names.end());
+
+				// write out ar the correct index
+				for (string au_name : au_class_names)
+				{
+					for (auto au_class : aus_class)
+					{
+						if (au_name.compare(au_class.first) == 0)
+						{
+							auStream << " " << au_name << ":" << au_class.second;
+							break;
+						}
+					}
+				}
+
+				string aus = auStream.str();
+
+				zmq::message_t messageAUs(aus.c_str(), aus.length());
+				publisher.send(messageAUs);
+
 			}
 
 			visualise_tracking(captured_image, depth_image, clnf_model, det_parameters, gazeDirection0, gazeDirection1, frame_count, fx, fy, cx, cy);
