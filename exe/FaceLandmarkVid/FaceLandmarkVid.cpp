@@ -195,24 +195,6 @@ int main (int argc, char **argv)
 	zmq::context_t context(1);
 	zmq::socket_t publisher(context, ZMQ_PUB);
 	publisher.bind("tcp://*:5556");
-	/*
-	while (1) {
-		cout << "Hello?" << endl;
-		int zipcode, temperature, relhumidity;
-
-		//  Get values that will fool the boss
-		zipcode = 56787;
-		temperature = 78;
-		relhumidity = 86;
-
-		//  Send message to all subscribers
-		zmq::message_t message(20);
-		snprintf((char*)message.data(), 20,
-			"%05d %d %d", zipcode, temperature, relhumidity);
-		publisher.send(message);
-
-	}
-	return 0;*/
 
 
 	vector<string> arguments = get_arguments(argc, argv);
@@ -452,6 +434,7 @@ int main (int argc, char **argv)
 				vector<string> au_reg_names = face_analyser.GetAURegNames();
 				std::sort(au_reg_names.begin(), au_reg_names.end());
 
+				int i = 0;
 				// write out ar the correct index
 				for (string au_name : au_reg_names)
 				{
@@ -460,6 +443,10 @@ int main (int argc, char **argv)
 						if (au_name.compare(au_reg.first) == 0)
 						{
 							auStream << " " << au_name << ":" << au_reg.second;
+
+							stringstream auss;
+							auss << au_name << ": " << au_reg.second;
+							cv::putText(captured_image, auss.str(), cv::Point(10, 30 + 20 * (i++)), CV_FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 0, 128));
 							break;
 						}
 					}
