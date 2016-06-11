@@ -235,7 +235,7 @@ int main (int argc, char **argv)
 
 	// If multiple video files are tracked, use this to indicate if we are done
 	bool done = false;	
-	int f_n = -1;
+	int f_n = 0;
 	
 	det_parameters.track_gaze = true;
 
@@ -275,7 +275,7 @@ int main (int argc, char **argv)
 		// We might specify multiple video files as arguments
 		if(files.size() > 0)
 		{
-			f_n++;			
+			//f_n++;			
 		    current_file = files[f_n];
 		}
 		else
@@ -516,7 +516,7 @@ int main (int argc, char **argv)
 		// break out of the loop if done with all the files (or using a webcam)
 		if(f_n == files.size() -1 || files.empty())
 		{
-			done = true;
+			//done = true;
 		}
 	}
 
