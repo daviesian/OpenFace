@@ -496,6 +496,9 @@ int main (int argc, char **argv)
 			if(character_press == 'r')
 			{
 				clnf_model.Reset();
+				zmq::message_t messageReset("RESET", 5);
+				publisher.send(messageReset);
+
 			}
 			// quit the application
 			else if(character_press=='q')
