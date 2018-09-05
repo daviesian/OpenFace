@@ -1,5 +1,13 @@
 # OpenFace: an open source facial behavior analysis toolkit
 
+## About this fork
+
+This fork has a version of the FaceLandmarkVid executable that outputs some of the parameters over a ZeroMQ socket.  This means they can be read at speed by other processes.
+
+It was created by Ian Davies for use with '[Charles](https://github.com/daviesian/charles)', an animatronic head.
+
+## Introduction
+
 Over the past few years, there has been an increased interest in automatic facial behavior analysis and understanding. We present OpenFace – an open source tool intended for computer vision and machine learning researchers, affective computing community and people interested in building interactive applications based on facial behavior analysis. OpenFace is the ﬁrst open source tool capable of facial landmark detection, head pose estimation, facial action unit recognition, and eye-gaze estimation. The computer vision algorithms which represent the core of OpenFace demonstrate state-of-the-art results in all of the above mentioned tasks. Furthermore, our tool is capable of real-time performance and is able to run from a simple webcam without any specialist hardware.
 
 The code was written mainly by Tadas Baltrusaitis during his time at the Language Technologies Institute at the Carnegie Mellon University; Computer Laboratory, University of Cambridge; and Institute for Creative Technologies, University of Southern California.
